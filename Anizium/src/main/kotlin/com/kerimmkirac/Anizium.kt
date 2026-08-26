@@ -31,14 +31,14 @@ class Anizium : MainAPI() {
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val node = AniziumApi.getJson(this, request.data.replace("%d", page.toString()))
+        val node = AniziumApi.getJson(request.data.replace("%d", page.toString()))
             ?: return newHomePageResponse(request.name, emptyList())
         val items = extractItems(AniziumApi.unwrap(node))
         return newHomePageResponse(request.name, items.mapNotNull { it.asSearchResponse() }, hasNext = items.isNotEmpty())
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val node = AniziumApi.getJson(this, "/page/search?value=${AniziumApi.encode(query)}&page=1") ?: return emptyList()
+        val node = AniziumApi.getJson("/page/search?value=${AniziumApi.encode(query)}&page=1") ?: return emptyList()
         return extractItems(AniziumApi.unwrap(node)).mapNotNull { it.asSearchResponse() }
     }
 
@@ -48,7 +48,7 @@ class Anizium : MainAPI() {
             ?: url.substringAfterLast('/').takeIf { it.matches(Regex("\\d+")) }
             ?: return null
 
-        val node = AniziumApi.getJson(this, "/anime/get?id=$animeId") ?: return null
+        val node = AniziumApi.getJson("/anime/get?id=$animeId") ?: return null
         val root = AniziumApi.unwrap(node)
         val title = AniziumApi.text(root, "name", "title", "animeName") ?: return null
         val poster = AniziumApi.text(root, "poster", "posterUrl", "image", "cover", "coverUrl")
@@ -101,7 +101,6 @@ class Anizium : MainAPI() {
 
         for (plan in listOf("standart", "premium")) {
             val sourceNode = AniziumApi.getJson(
-                this,
                 "/anime/source?id=${AniziumApi.encode(ref.animeId)}&site=main&plan=$plan&season=${ref.season}&episode=${ref.episode}&server=1"
             )
             if (sourceNode != null && emitApiSources(sourceNode, subtitleCallback, callback)) return true
