@@ -2,7 +2,7 @@ package com.kerimmkirac
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.app
 import java.net.URLEncoder
 import java.security.MessageDigest
 import java.time.Instant
@@ -66,16 +66,12 @@ object AniziumApi {
             putAll(extra)
         }
 
-    suspend fun getJson(api: MainAPI, path: String): JsonNode? = with(api) {
+    suspend fun getJson(path: String): JsonNode? {
         val bases = listOf(API, LEGACY, WEB)
         for (base in bases) {
             val url = if (path.startsWith("http")) path else "$base/${path.trimStart('/')}"
             try {
-                val response = app.get(url, headers = headers())
-                if (!response.isSuccessful) continue
-                val body = response.text
-                if (body.isBlank()) continue
-                return mapper.readTree(body)
+                return app.get(url, headers = headers()).parsed<JsonNode>()
             } catch (_: Throwable) {
             }
         }
