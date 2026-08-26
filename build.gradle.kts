@@ -12,7 +12,6 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:9.1.0")
         classpath("com.github.recloudstream:gradle:81b1d424d2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20")
     }
 }
 
@@ -33,7 +32,6 @@ fun Project.android(configuration: LibraryExtension.() -> Unit) =
 subprojects {
     apply(plugin = "com.android.library")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
-    apply(plugin = "kotlin-android")
 
     cloudstream {
         setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.com/anisector/anz")
