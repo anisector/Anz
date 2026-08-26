@@ -30,7 +30,7 @@ class Anizium : MainAPI() {
         MainPageData("Bilim Kurgu", "/page/catalog?id=94032&type=genre&page=%d"),
     )
 
-    override suspend fun getMainPage(page: Int, request: MainPageData): HomePageResponse {
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val node = AniziumApi.getJson(this, request.data.replace("%d", page.toString()))
             ?: return newHomePageResponse(request.name, emptyList())
         val items = extractItems(AniziumApi.unwrap(node))
