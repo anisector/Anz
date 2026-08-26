@@ -10,7 +10,7 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 class Anizium : MainAPI() {
     override var mainUrl = AniziumApi.WEB
     override var name = "Anizium"
-    override val lang = "tr"
+    override var lang = "tr"
     override val supportedTypes = setOf(TvType.Anime, TvType.AnimeMovie)
     override val hasMainPage = true
     override val hasQuickSearch = true
@@ -19,22 +19,22 @@ class Anizium : MainAPI() {
     private val mapper = jacksonObjectMapper()
 
     override val mainPage = listOf(
-        MainPageRequest("Yeni Bölümler", "/page/last-added-episodes?page=%d"),
-        MainPageRequest("Top 100", "/page/top?platform=favorite&page=%d"),
-        MainPageRequest("Aksiyon", "/page/catalog?id=23813&type=genre&page=%d"),
-        MainPageRequest("Macera", "/page/catalog?id=43261&type=genre&page=%d"),
-        MainPageRequest("Komedi", "/page/catalog?id=47450&type=genre&page=%d"),
-        MainPageRequest("Drama", "/page/catalog?id=59624&type=genre&page=%d"),
-        MainPageRequest("Fantastik", "/page/catalog?id=62263&type=genre&page=%d"),
-        MainPageRequest("Romantik", "/page/catalog?id=87910&type=genre&page=%d"),
-        MainPageRequest("Bilim Kurgu", "/page/catalog?id=94032&type=genre&page=%d"),
+        MainPageData("Yeni Bölümler", "/page/last-added-episodes?page=%d"),
+        MainPageData("Top 100", "/page/top?platform=favorite&page=%d"),
+        MainPageData("Aksiyon", "/page/catalog?id=23813&type=genre&page=%d"),
+        MainPageData("Macera", "/page/catalog?id=43261&type=genre&page=%d"),
+        MainPageData("Komedi", "/page/catalog?id=47450&type=genre&page=%d"),
+        MainPageData("Drama", "/page/catalog?id=59624&type=genre&page=%d"),
+        MainPageData("Fantastik", "/page/catalog?id=62263&type=genre&page=%d"),
+        MainPageData("Romantik", "/page/catalog?id=87910&type=genre&page=%d"),
+        MainPageData("Bilim Kurgu", "/page/catalog?id=94032&type=genre&page=%d"),
     )
 
-    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+    override suspend fun getMainPage(page: Int, request: MainPageData): HomePageResponse {
         val node = AniziumApi.getJson(this, request.data.replace("%d", page.toString()))
             ?: return newHomePageResponse(request.name, emptyList())
         val items = extractItems(AniziumApi.unwrap(node))
-        return newHomePageResponse(request.name, items.mapNotNull { it.asSearchResponse() }, hasNextPage = items.isNotEmpty())
+        return newHomePageResponse(request.name, items.mapNotNull { it.asSearchResponse() }, hasNext = items.isNotEmpty())
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
