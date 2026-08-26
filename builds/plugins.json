@@ -1,0 +1,25 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/anisector/anz/main/builds/Anizium.cs3",
+    "status": 1,
+    "version": 28,
+    "name": "Anizium",
+    "internalName": "Anizium",
+    "authors": [
+      "kerimmkirac",
+      "ByAyzen",
+      "anisector"
+    ],
+    "description": "Anizium current API CloudStream provider test build.",
+    "fileSize": 26852,
+    "repositoryUrl": "https://github.com/anisector/anz",
+    "language": "tr",
+    "tvTypes": [
+      "AnimeMovie",
+      "Anime"
+    ],
+    "iconUrl": "https://anizium.co/assets/images/logo.png",
+    "apiVersion": 1,
+    "fileHash": "sha256-ae1ded3e4c3fd5115748d696ec16661285ae6d5a114a3404744e5d6084253cbf"
+  }
+]
