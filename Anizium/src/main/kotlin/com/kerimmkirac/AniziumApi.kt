@@ -66,12 +66,12 @@ object AniziumApi {
             putAll(extra)
         }
 
-    suspend fun getJson(api: MainAPI, path: String): JsonNode? {
+    suspend fun getJson(api: MainAPI, path: String): JsonNode? = with(api) {
         val bases = listOf(API, LEGACY, WEB)
         for (base in bases) {
             val url = if (path.startsWith("http")) path else "$base/${path.trimStart('/')}"
             try {
-                val response = api.app.get(url, headers = headers())
+                val response = app.get(url, headers = headers())
                 if (!response.isSuccessful) continue
                 val body = response.text
                 if (body.isBlank()) continue
