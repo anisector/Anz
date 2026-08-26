@@ -5,7 +5,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 buildscript {
     repositories {
-        google(); mavenCentral(); maven("https://jitpack.io")
+        google()
+        mavenCentral()
+        maven("https://jitpack.io")
     }
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
@@ -16,12 +18,15 @@ buildscript {
 
 allprojects {
     repositories {
-        google(); mavenCentral(); maven("https://jitpack.io")
+        google()
+        mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 
 fun Project.cloudstream(configure: CloudstreamExtension.() -> Unit) =
     extensions.getByName<CloudstreamExtension>("cloudstream").configure()
+
 fun Project.android(configure: BaseExtension.() -> Unit) =
     extensions.getByName<BaseExtension>("android").configure()
 
@@ -59,6 +64,7 @@ subprojects {
     }
 
     dependencies {
+        val implementation by configurations
         implementation("com.github.recloudstream.cloudstream:library:-SNAPSHOT")
         implementation(kotlin("stdlib"))
         implementation("com.github.Blatzar:NiceHttp:0.4.11")
