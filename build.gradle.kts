@@ -33,6 +33,7 @@ fun Project.android(configuration: LibraryExtension.() -> Unit) =
 subprojects {
     apply(plugin = "com.android.library")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
+    apply(plugin = "kotlin-android")
 
     cloudstream {
         setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.com/anisector/anz")
@@ -65,11 +66,11 @@ subprojects {
     dependencies {
         val cloudstream by configurations
         cloudstream("com.lagradost:cloudstream3:pre-release")
-        implementation(kotlin("stdlib"))
-        implementation("com.github.Blatzar:NiceHttp:0.4.18")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
-        implementation("androidx.annotation:annotation:1.10.0")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+        add("implementation", kotlin("stdlib"))
+        add("implementation", "com.github.Blatzar:NiceHttp:0.4.18")
+        add("implementation", "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+        add("implementation", "androidx.annotation:annotation:1.10.0")
+        add("implementation", "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     }
 }
 
