@@ -1,6 +1,6 @@
-# Anizium CloudStream test repo
+# Anz CloudStream test repo
 
-Bu depo Anizium provider'ın güncel API geçiş sürümünü test etmek içindir.
+Bu depo Anz provider'ın güncel API geçiş sürümünü test etmek içindir.
 
 ## CloudStream repo URL
 
