@@ -6,4 +6,5 @@ dependencyResolutionManagement {
     repositories { google(); mavenCentral(); maven("https://jitpack.io") }
 }
 rootProject.name = "anizium-modern"
-include(":Anizium")
+include(":Anz")
+
