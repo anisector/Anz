@@ -4,6 +4,6 @@
   "description": "Anizium CloudStream provider test repository",
   "manifestVersion": 1,
   "pluginLists": [
-    "https://raw.githubusercontent.com/anisector/Anz/main/builds/plugins.json"
+    "https://cdn.jsdelivr.net/gh/anisector/Anz@main/builds/plugins.json"
   ]
 }
