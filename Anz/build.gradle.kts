@@ -7,3 +7,4 @@ cloudstream {
     language = "tr"
     iconUrl = "https://anizium.co/assets/images/logo.png"
 }
+

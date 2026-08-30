@@ -1,7 +1,9 @@
 package com.kerimmkirac
 
+
 import com.lagradost.cloudstream3.plugins.BasePlugin
 import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
+
 
 @CloudstreamPlugin
 class AniziumPlugin : BasePlugin() {
@@ -9,3 +11,4 @@ class AniziumPlugin : BasePlugin() {
         registerMainAPI(Anizium())
     }
 }
+
