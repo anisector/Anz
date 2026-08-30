@@ -60,7 +60,7 @@ jobs:
           p = pathlib.Path('builds/Anizium.cs3')
           h = hashlib.sha256(p.read_bytes()).hexdigest()
           item = {
-              'url': 'https://raw.githubusercontent.com/anisector/anz/main/builds/Anizium.cs3',
+              'url': 'https://cdn.jsdelivr.net/gh/anisector/Anz@main/builds/Anizium.cs3',
               'status': 1,
               'version': 28,
               'name': 'Anizium',
