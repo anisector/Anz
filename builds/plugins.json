@@ -1,6 +1,6 @@
 [
   {
-    "url": "https://raw.githubusercontent.com/anisector/anz/main/builds/Anizium.cs3",
+    "url": "https://cdn.jsdelivr.net/gh/anisector/Anz@main/builds/Anizium.cs3",
     "status": 1,
     "version": 28,
     "name": "Anizium",
@@ -12,7 +12,7 @@
     ],
     "description": "Anizium current API CloudStream provider test build.",
     "fileSize": 26838,
-    "repositoryUrl": "https://github.com/anisector/anz",
+    "repositoryUrl": "https://github.com/anisector/Anz",
     "language": "tr",
     "tvTypes": [
       "AnimeMovie",
