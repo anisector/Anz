@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          FILE=$(find . -type f -name '*.cs3' -print -quit)
+          FILE=$(find . -path './builds/Anizium.cs3' -prune -o -type f -name '*.cs3' -print -quit)
           if [ -z "$FILE" ]; then
             echo 'No .cs3 file produced.'
             find . -maxdepth 5 -type f | sort | head -300
@@ -52,7 +52,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p builds
-          cp "$CS3" builds/Anizium.cs3
+          if [ "$CS3" != "./builds/Anizium.cs3" ]; then
+            cp "$CS3" builds/Anizium.cs3
+          fi
           python3 - <<'PY'
           import hashlib, json, pathlib
           p = pathlib.Path('builds/Anizium.cs3')
