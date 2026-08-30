@@ -11,7 +11,7 @@
       "anisector"
     ],
     "description": "Anizium current API CloudStream provider test build.",
-    "fileSize": 26852,
+    "fileSize": 26838,
     "repositoryUrl": "https://github.com/anisector/anz",
     "language": "tr",
     "tvTypes": [
@@ -20,6 +20,6 @@
     ],
     "iconUrl": "https://anizium.co/assets/images/logo.png",
     "apiVersion": 1,
-    "fileHash": "sha256-ae1ded3e4c3fd5115748d696ec16661285ae6d5a114a3404744e5d6084253cbf"
+    "fileHash": "sha256-ce806ac29cf2d85aad7c666e25c9deb91015c6d4ebd85acb129ca472472ae340"
   }
 ]
