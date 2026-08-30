@@ -31,65 +31,61 @@ jobs:
       - name: Build plugin
         run: gradle :Anz:make --stacktrace
 
-      - name: Locate CS3
-        id: locate
+      - name: Prepare build output
         shell: bash
         run: |
           set -euo pipefail
-          FILE=$(find . -path './builds/Anizium.cs3' -prune -o -type f -name '*.cs3' -print -quit)
+          FILE=$(find . -path './.git' -prune -o -type f -name '*.cs3' -print | head -1)
           if [ -z "$FILE" ]; then
             echo 'No .cs3 file produced.'
-            find . -maxdepth 5 -type f | sort | head -300
             exit 1
           fi
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
-          echo "Built: $FILE"
-
-      - name: Publish test repo files
-        shell: bash
-        env:
-          CS3: ${{ steps.locate.outputs.file }}
-        run: |
-          set -euo pipefail
-          mkdir -p builds
-          if [ "$CS3" != "./builds/Anizium.cs3" ]; then
-            cp "$CS3" builds/Anizium.cs3
-          fi
+          cp "$FILE" /tmp/Anizium.cs3
           python3 - <<'PY'
           import hashlib, json, pathlib
-          p = pathlib.Path('builds/Anizium.cs3')
+          p = pathlib.Path('/tmp/Anizium.cs3')
           h = hashlib.sha256(p.read_bytes()).hexdigest()
           item = {
-              'url': 'https://cdn.jsdelivr.net/gh/anisector/Anz@main/builds/Anizium.cs3',
+              'url': 'https://raw.githubusercontent.com/anisector/Anz/builds/Anizium.cs3',
               'status': 1,
               'version': 28,
               'name': 'Anizium',
               'internalName': 'Anizium',
               'authors': ['kerimmkirac', 'ByAyzen', 'anisector'],
-              'description': 'Anizium current API CloudStream provider test build.',
+              'description': 'Anizium current API CloudStream provider.',
               'fileSize': p.stat().st_size,
-              'repositoryUrl': 'https://github.com/anisector/anz',
+              'repositoryUrl': 'https://github.com/anisector/Anz',
               'language': 'tr',
               'tvTypes': ['AnimeMovie', 'Anime'],
               'iconUrl': 'https://anizium.co/assets/images/logo.png',
               'apiVersion': 1,
               'fileHash': 'sha256-' + h,
           }
-          pathlib.Path('builds/plugins.json').write_text(json.dumps([item], ensure_ascii=False, indent=2) + '\n')
-          print('SHA256:', h)
-          print('SIZE:', p.stat().st_size)
+          pathlib.Path('/tmp/plugins.json').write_text(json.dumps([item], ensure_ascii=False, indent=2) + '\n')
           PY
+          cat > /tmp/repo.json <<'JSON'
+          {
+            "name": "Anizium Test Repo | anisector",
+            "description": "Anizium CloudStream provider test repository",
+            "manifestVersion": 1,
+            "pluginLists": [
+              "https://raw.githubusercontent.com/anisector/Anz/builds/plugins.json"
+            ]
+          }
+          JSON
 
-      - name: Commit built plugin
+      - name: Publish builds branch
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add builds/Anizium.cs3 builds/plugins.json
-          if git diff --cached --quiet; then
-            echo 'No build output changes to commit.'
-            exit 0
-          fi
-          git commit -m 'Build Anizium CloudStream plugin'
-          git push
+          git fetch origin builds
+          git checkout -B builds origin/builds
+          git rm -r -f . || true
+          cp /tmp/Anizium.cs3 ./Anizium.cs3
+          cp /tmp/plugins.json ./plugins.json
+          cp /tmp/repo.json ./repo.json
+          git add -A
+          git commit -m 'Publish Anizium CloudStream build'
+          git push origin builds --force
