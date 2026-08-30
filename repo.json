@@ -1,9 +1,8 @@
 {
-  "iconUrl": "https://anizium.co/assets/images/logo.png",
   "name": "Anizium Test Repo | anisector",
   "description": "Anizium CloudStream provider test repository",
   "manifestVersion": 1,
   "pluginLists": [
-    "https://raw.githubusercontent.com/anisector/anz/main/builds/plugins.json"
+    "https://raw.githubusercontent.com/anisector/Anz/builds/plugins.json"
   ]
 }
