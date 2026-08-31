@@ -1,4 +1,4 @@
-version = 28
+version = 29
 cloudstream {
     description = "Anizium provider - current API + CDN fallback"
     authors = listOf("kerimmkirac", "ByAyzen", "anisector")
@@ -7,4 +7,3 @@ cloudstream {
     language = "tr"
     iconUrl = "https://anizium.co/assets/images/logo.png"
 }
-
