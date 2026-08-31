@@ -28,11 +28,25 @@ jobs:
         with:
           gradle-version: '9.3.1'
 
+      - name: Read plugin version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION=$(sed -n 's/^version = \([0-9][0-9]*\).*/\1/p' Anz/build.gradle.kts | head -1)
+          if [ -z "$VERSION" ]; then
+            echo 'Could not determine plugin version.'
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Build plugin
         run: gradle :Anz:make --stacktrace
 
       - name: Prepare build output
         shell: bash
+        env:
+          PLUGIN_VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
           FILE=$(find . -path './.git' -prune -o -type f -name '*.cs3' -print | head -1)
@@ -42,13 +56,13 @@ jobs:
           fi
           cp "$FILE" /tmp/Anizium.cs3
           python3 - <<'PY'
-          import hashlib, json, pathlib
+          import hashlib, json, os, pathlib
           p = pathlib.Path('/tmp/Anizium.cs3')
           h = hashlib.sha256(p.read_bytes()).hexdigest()
           item = {
-              'url': 'https://raw.githubusercontent.com/anisector/Anz/builds/Anizium.cs3',
+              'url': 'https://raw.githubusercontent.com/anisector/Anz/refs/heads/builds/Anizium.cs3',
               'status': 1,
-              'version': 28,
+              'version': int(os.environ['PLUGIN_VERSION']),
               'name': 'Anizium',
               'internalName': 'Anizium',
               'authors': ['kerimmkirac', 'ByAyzen', 'anisector'],
@@ -65,11 +79,12 @@ jobs:
           PY
           cat > /tmp/repo.json <<'JSON'
           {
-            "name": "Anizium Test Repo | anisector",
-            "description": "Anizium CloudStream provider test repository",
+            "iconUrl": "https://anizium.co/assets/images/logo.png",
+            "name": "Anizium CloudStream Repo | anisector",
+            "description": "Anizium CloudStream provider repository",
             "manifestVersion": 1,
             "pluginLists": [
-              "https://raw.githubusercontent.com/anisector/Anz/builds/plugins.json"
+              "https://raw.githubusercontent.com/anisector/Anz/refs/heads/builds/plugins.json"
             ]
           }
           JSON
@@ -87,5 +102,9 @@ jobs:
           cp /tmp/plugins.json ./plugins.json
           cp /tmp/repo.json ./repo.json
           git add -A
+          if git diff --cached --quiet; then
+            echo 'No published changes.'
+            exit 0
+          fi
           git commit -m 'Publish Anizium CloudStream build'
           git push origin builds --force
