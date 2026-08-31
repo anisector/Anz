@@ -1,6 +1,6 @@
-version = 30
+version = 31
 cloudstream {
-    description = "Anizium provider - current API + browser-compatible headers"
+    description = "Anizium provider - browser-compatible API headers and Cf-Control"
     authors = listOf("kerimmkirac", "ByAyzen", "anisector")
     status = 1
     tvTypes = listOf("Anime", "AnimeMovie")
