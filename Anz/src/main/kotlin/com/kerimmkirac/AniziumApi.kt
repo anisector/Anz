@@ -19,9 +19,6 @@ object AniziumApi {
     const val ONLINE = "https://api.anizium.online"
     const val LEGACY = "https://x.anizium.co"
 
-    // Matches the token-generation scheme found in the Anizium client ecosystem:
-    // token = XOR-hex(JSON({ random6: unixMillis }), key + "_" + englishWeekday)
-    // Key confirmed in the public Anizium-compatible client implementation.
     private const val CF_TOKEN_KEY = "16ghkdz5qnwinkyebwopbd94b49xhs"
 
     private val jsonHeaders = mapOf(
@@ -68,14 +65,24 @@ object AniziumApi {
         }
 
     suspend fun getJson(path: String): JsonNode? {
-        // Keep the current .co API first; the official TV app also contains an .online base.
         val bases = listOf(API, ONLINE, LEGACY, WEB)
         for (base in bases) {
             val url = if (path.startsWith("http")) path else "$base/${path.trimStart('/')}"
+
+            // Try the current request format first.
             try {
-                val response = app.get(url, headers = headers())
+                val response = app.get(url, headers = headers(cf = true))
                 if (response.isSuccessful) {
-                    return response.parsed<JsonNode>()
+                    runCatching { return response.parsed<JsonNode>() }
+                }
+            } catch (_: Throwable) {
+            }
+
+            // Some current API/CDN paths do not require Cf-Control. Fall back without it.
+            try {
+                val response = app.get(url, headers = headers(cf = false))
+                if (response.isSuccessful) {
+                    runCatching { return response.parsed<JsonNode>() }
                 }
             } catch (_: Throwable) {
             }
