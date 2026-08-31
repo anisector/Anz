@@ -54,13 +54,15 @@ jobs:
             echo 'No .cs3 file produced.'
             exit 1
           fi
-          cp "$FILE" /tmp/Anizium.cs3
+          if [ "$FILE" != "./Anizium.cs3" ]; then
+            cp "$FILE" ./Anizium.cs3
+          fi
           python3 - <<'PY'
           import hashlib, json, os, pathlib
-          p = pathlib.Path('/tmp/Anizium.cs3')
+          p = pathlib.Path('Anizium.cs3')
           h = hashlib.sha256(p.read_bytes()).hexdigest()
           item = {
-              'url': 'https://raw.githubusercontent.com/anisector/Anz/refs/heads/builds/Anizium.cs3',
+              'url': 'https://raw.githubusercontent.com/anisector/Anz/refs/heads/main/Anizium.cs3',
               'status': 1,
               'version': int(os.environ['PLUGIN_VERSION']),
               'name': 'Anizium',
@@ -75,43 +77,30 @@ jobs:
               'apiVersion': 1,
               'fileHash': 'sha256-' + h,
           }
-          pathlib.Path('/tmp/plugins.json').write_text(json.dumps([item], ensure_ascii=False, indent=2) + '\n')
+          pathlib.Path('plugins.json').write_text(json.dumps([item], ensure_ascii=False, indent=2) + '\n')
           PY
-          cat > /tmp/repo.json <<'JSON'
+          cat > repo.json <<'JSON'
           {
             "iconUrl": "https://anizium.co/assets/images/logo.png",
             "name": "Anizium CloudStream Repo | anisector",
             "description": "Anizium CloudStream provider repository",
             "manifestVersion": 1,
             "pluginLists": [
-              "https://raw.githubusercontent.com/anisector/Anz/refs/heads/builds/plugins.json"
+              "https://raw.githubusercontent.com/anisector/Anz/refs/heads/main/plugins.json"
             ]
           }
           JSON
 
-      - name: Publish builds branch
+      - name: Publish plugin files to main
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-
-          if git ls-remote --exit-code --heads origin builds >/dev/null 2>&1; then
-            git fetch origin builds
-            git checkout -B builds origin/builds
-          else
-            git checkout --orphan builds
-            git reset --hard
-          fi
-
-          git rm -r -f . || true
-          cp /tmp/Anizium.cs3 ./Anizium.cs3
-          cp /tmp/plugins.json ./plugins.json
-          cp /tmp/repo.json ./repo.json
-          git add -A
+          git add Anizium.cs3 plugins.json repo.json
           if git diff --cached --quiet; then
             echo 'No published changes.'
             exit 0
           fi
-          git commit -m 'Publish Anizium CloudStream build'
-          git push origin builds --force
+          git commit -m 'Publish Anizium CloudStream build [skip ci]'
+          git push origin HEAD:main
