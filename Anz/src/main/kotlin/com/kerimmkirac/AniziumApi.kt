@@ -22,12 +22,15 @@ object AniziumApi {
     private const val CF_TOKEN_KEY = "16ghkdz5qnwinkyebwopbd94b49xhs"
 
     private val jsonHeaders = mapOf(
-        "Accept" to "application/json",
+        "Accept" to "application/json, text/javascript, */*; q=0.01",
+        "Content-Type" to "application/json",
         "User-Agent" to "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/140.0 Mobile Safari/537.36",
         "Origin" to WEB,
         "Referer" to "$WEB/",
         "device" to "browser",
         "device_type" to "browser",
+        "user-profile" to "null",
+        "user-session" to "null",
         "language" to "tr",
         "site" to "main",
     )
@@ -69,7 +72,6 @@ object AniziumApi {
         for (base in bases) {
             val url = if (path.startsWith("http")) path else "$base/${path.trimStart('/')}"
 
-            // Try the current request format first.
             try {
                 val response = app.get(url, headers = headers(cf = true))
                 if (response.isSuccessful) {
@@ -78,7 +80,6 @@ object AniziumApi {
             } catch (_: Throwable) {
             }
 
-            // Some current API/CDN paths do not require Cf-Control. Fall back without it.
             try {
                 val response = app.get(url, headers = headers(cf = false))
                 if (response.isSuccessful) {
@@ -97,9 +98,9 @@ object AniziumApi {
             val result = cur.get("result")
             val payload = cur.get("payload")
             cur = when {
-                data?.isObject == true -> data
-                result?.isObject == true -> result
-                payload?.isObject == true -> payload
+                data?.isObject == true || data?.isArray == true -> data
+                result?.isObject == true || result?.isArray == true -> result
+                payload?.isObject == true || payload?.isArray == true -> payload
                 else -> return cur
             }
         }
