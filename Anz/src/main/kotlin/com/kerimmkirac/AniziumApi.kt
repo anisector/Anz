@@ -19,7 +19,8 @@ object AniziumApi {
     const val ONLINE = "https://api.anizium.online"
     const val LEGACY = "https://x.anizium.co"
 
-    private const val CF_TOKEN_KEY = "16ghkdz5qnwinkyebwopbd94b49xhs"
+    // Recovered from a live browser request captured from Anizium's API.
+    private const val CF_TOKEN_KEY = "hlxjl1c2w281ax473rt1ofgrvhyjvi"
 
     private val jsonHeaders = mapOf(
         "Accept" to "application/json, text/javascript, */*; q=0.01",
