@@ -95,8 +95,15 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin builds
-          git checkout -B builds origin/builds
+
+          if git ls-remote --exit-code --heads origin builds >/dev/null 2>&1; then
+            git fetch origin builds
+            git checkout -B builds origin/builds
+          else
+            git checkout --orphan builds
+            git reset --hard
+          fi
+
           git rm -r -f . || true
           cp /tmp/Anizium.cs3 ./Anizium.cs3
           cp /tmp/plugins.json ./plugins.json
